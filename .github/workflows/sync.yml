@@ -1,0 +1,65 @@
+name: Sync Fork with Upstream (Backup/Restore Workflow)
+
+on:
+  schedule:
+    - cron: '0 0 * * *' 
+  workflow_dispatch: 
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        ref: main # 你的仓库主分支
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Backup workflow file
+      # 检查文件是否存在再备份，避免首次运行时文件不存在报错
+      run: |
+        if [ -f .github/workflows/sync.yml ]; then
+          cp .github/workflows/sync.yml /tmp/sync_workflow_backup.yml
+          echo "Backed up sync.yml"
+        else
+          echo "sync.yml not found, skipping backup."
+        fi
+
+    - name: Add upstream remote
+      run: git remote add upstream https://github.com/Zephyruso/zashboard.git
+
+    - name: Fetch upstream
+      run: git fetch upstream
+
+    - name: Reset to upstream/main (Overwrite all other content)
+      # ⚠️ 注意：这会丢弃你本地分支上所有与上游不同的提交，除了工作流文件会被恢复
+      run: git reset --hard upstream/main
+
+    - name: Restore workflow file
+      # 检查备份文件是否存在再恢复，避免首次运行时没有备份文件报错
+      run: |
+        if [ -f /tmp/sync_workflow_backup.yml ]; then
+          mkdir -p .github/workflows # 确保目录存在
+          mv /tmp/sync_workflow_backup.yml .github/workflows/sync.yml
+          echo "Restored sync.yml"
+        else
+          echo "No sync.yml backup found, skipping restore."
+        fi
+
+    - name: Add restored workflow file to staging
+      # 即使文件内容没有变化，也需要确保它被 Git 跟踪
+      run: git add .github/workflows/sync.yml
+
+    - name: Commit restored workflow file (if changed)
+      # 只有当工作流文件实际有变化时才提交
+      run: git commit -m "Restore sync.yml workflow file after upstream sync" || true
+      # || true 使得即使没有新的更改，命令也不会失败，以便后续步骤继续执行
+
+    - name: Force push changes to origin
+      # ⚠️ 注意：使用 --force 推送，这会覆盖远程分支的历史，请谨慎使用！
+      run: git push --force origin main
