@@ -75,6 +75,8 @@ const zh: LANG_MESSAGE = {
   endpointLabel: '端点',
   activeLabel: '已启用',
   availableLabel: '可用',
+  dragOrClickToAdd: '拖拽或点击添加',
+  addRow: '添加行',
   sshConfiguration: 'SSH 配置',
   terminalType: '终端类型',
   rememberSSHOptions: '记住 SSH 配置',

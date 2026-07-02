@@ -73,6 +73,8 @@ const en = {
   endpointLabel: 'Endpoint',
   activeLabel: 'Active',
   availableLabel: 'Available',
+  dragOrClickToAdd: 'Drag or click to add',
+  addRow: 'Add row',
   sshConfiguration: 'SSH Configuration',
   terminalType: 'Terminal type',
   rememberSSHOptions: 'Remember SSH options',

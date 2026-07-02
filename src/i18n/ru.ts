@@ -75,6 +75,8 @@ const ru: LANG_MESSAGE = {
   endpointLabel: 'Конечная точка',
   activeLabel: 'Активен',
   availableLabel: 'Доступен',
+  dragOrClickToAdd: 'Перетащите или нажмите, чтобы добавить',
+  addRow: 'Добавить строку',
   sshConfiguration: 'Настройка SSH',
   terminalType: 'Тип терминала',
   rememberSSHOptions: 'Запомнить параметры SSH',

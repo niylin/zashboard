@@ -75,6 +75,8 @@ const zhTW: LANG_MESSAGE = {
   endpointLabel: '端點',
   activeLabel: '已啟用',
   availableLabel: '可用',
+  dragOrClickToAdd: '拖曳或點擊新增',
+  addRow: '新增行',
   sshConfiguration: 'SSH 設定',
   terminalType: '終端類型',
   rememberSSHOptions: '記住 SSH 設定',
