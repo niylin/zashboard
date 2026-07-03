@@ -2,7 +2,7 @@
 // 维护成活跃连接表,并直接产出统一的 ConnectionsSnapshot(active 带瞬时速率、closed 为本拍增量)。
 // 速率由事件自带的 uplinkDelta/downlinkDelta 累计得到,CLOSED 事件直接产出已关闭连接 —— 无需快照 diff。
 import { getSingboxClient } from '@/api/singbox/client'
-import { subscribeSharedStream } from '@/api/singbox/sharedStream'
+import { subscribeStream } from '@/api/singbox/subscriptions'
 import {
   ConnectionEventType,
   type ConnectionEvents,
@@ -59,7 +59,7 @@ const fetchSingboxConnections = (): {
     timer = setTimeout(emit, 100)
   }
 
-  const handle = subscribeSharedStream<ConnectionEvents>('connections', (msg) => {
+  const handle = subscribeStream<ConnectionEvents>('connections', (msg) => {
     if (msg.reset) {
       conns.clear()
     }
