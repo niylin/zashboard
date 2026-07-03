@@ -62,6 +62,8 @@ const createSingboxStat = <T>(kind: 'memory' | 'traffic'): SingboxStream<T> => {
       : subscribeSingboxStatus((status) => ({
           down: Number(status.downlink),
           up: Number(status.uplink),
+          downTotal: Number(status.downlinkTotal),
+          upTotal: Number(status.uplinkTotal),
         }))
 
   if (!sub) return { data, close: () => {} }

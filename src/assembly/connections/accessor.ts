@@ -23,8 +23,10 @@ export interface ConnectionsSnapshot {
   active: Connection[]
   // 本拍新关闭的连接(增量),供 store 追加进已关闭列表并落历史。
   closed: Connection[]
-  downloadTotal: number
-  uploadTotal: number
+  // 内核自启动的上/下行累计。clash 的连接 WS 消息原生携带,在此透传;
+  // sing-box 的连接流不带总量,由 status 统计流另行提供(见 store/overview)。
+  downloadTotal?: number
+  uploadTotal?: number
 }
 
 // 各后端原始数据 → view 字段的读取契约。实现内部按各自后端的原始类型取值。
