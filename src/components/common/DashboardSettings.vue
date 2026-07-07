@@ -238,7 +238,7 @@ const importSettingsFromFile = () => {
 }
 const importSettingsFromUrlHandler = async () => {
   dashboardSettingsDialogShow.value = false
-  await importSettingsFromUrl({ force: true, confirm: false })
+  await importSettingsFromUrl({ force: true })
 }
 
 const handlerClickUploadSettings = async () => {
@@ -284,7 +284,6 @@ const handlerClickSyncSettings = async () => {
     await syncSettingsFromCore({
       force: true,
       notify: true,
-      confirm: false,
     })
   } finally {
     isStorageSubmitting.value = false

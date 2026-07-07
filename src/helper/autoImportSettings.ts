@@ -1,4 +1,5 @@
 import { getStorageAPI } from '@/assembly/storage'
+import { showConfirmDialog } from '@/helper/confirmDialog'
 import { showNotification } from '@/helper/notification'
 import { applyDashboardSettingsToStorage } from '@/helper/utils'
 import { i18n } from '@/i18n'
@@ -27,16 +28,19 @@ const calculateSettingsHash = async (settings: Record<string, unknown>) => {
 }
 
 // 弹窗确认是否用即将写入的设置覆盖本地。无 key 会被实际覆盖时视为无需应用(返回 false)。
-const confirmSettingsOverride = (overriddenKeys: string[], messageKey: string) => {
+const confirmSettingsOverride = async (overriddenKeys: string[], messageKey: string) => {
   if (overriddenKeys.length === 0) {
     return false
   }
 
-  return window.confirm(
-    i18n.global.t(messageKey, {
+  const titleKey = messageKey === 'syncSettingsConfirm' ? 'syncSettings' : 'importSettings'
+
+  return showConfirmDialog({
+    title: i18n.global.t(titleKey),
+    message: i18n.global.t(messageKey, {
       keys: overriddenKeys.join('\n'),
     }),
-  )
+  })
 }
 
 // 找出后端设置中真正会覆盖本地的 config/ key(仅 applyDashboardSettingsToStorage 会写入的那些)
@@ -71,7 +75,10 @@ export const syncSettingsFromCore = async ({
   }
 
   // 记录 hash 避免对相同内容重复提示;用户拒绝(或无 key 变动)时保留本地设置
-  if (confirm && !confirmSettingsOverride(getOverriddenSettingKeys(data), 'syncSettingsConfirm')) {
+  if (
+    confirm &&
+    !(await confirmSettingsOverride(getOverriddenSettingKeys(data), 'syncSettingsConfirm'))
+  ) {
     autoSyncSettingsHash.value = newHash
     return false
   }
@@ -140,7 +147,7 @@ export const importSettingsFromUrl = async ({
   // 记录 hash 避免对相同内容重复提示;用户拒绝(或无 key 变动)时保留本地设置
   if (
     confirm &&
-    !confirmSettingsOverride(getImportOverriddenKeys(settings), 'importSettingsConfirm')
+    !(await confirmSettingsOverride(getImportOverriddenKeys(settings), 'importSettingsConfirm'))
   ) {
     autoImportSettingsHash.value = newHash
     return false
