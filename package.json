@@ -17,8 +17,9 @@
     "generate": "buf generate",
     "lint": "eslint . --fix",
     "prepare": "husky",
-    "preview": "vite preview",
-    "type-check": "vue-tsc --build --force"
+    "preview": "pnpm run build && wrangler dev",
+    "type-check": "vue-tsc --build --force",
+    "deploy": "pnpm run build && wrangler deploy"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.12.0",
@@ -63,6 +64,7 @@
   "devDependencies": {
     "@bufbuild/buf": "^1.70.0",
     "@bufbuild/protoc-gen-es": "^2.12.0",
+    "@cloudflare/vite-plugin": "^1.45.0",
     "@tailwindcss/postcss": "^4.3.1",
     "@tsconfig/node22": "^22.0.5",
     "@types/lodash": "^4.17.24",
@@ -86,7 +88,8 @@
     "tailwindcss": "^4.3.1",
     "typescript": "~6.0.3",
     "vite": "^7.3.5",
-    "vue-tsc": "^3.3.5"
+    "vue-tsc": "^3.3.5",
+    "wrangler": "^4.111.0"
   },
   "packageManager": "pnpm@10.15.0"
 }
